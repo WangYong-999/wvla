@@ -1,1286 +1,214 @@
 <!DOCTYPE html>
 <html>
-
 <head>
   <meta charset="utf-8">
-  <meta name="description" content="An Intuitive Multi-Task Manipulation Policy for Imitation Learning in Sim and Real Robots">
-  <meta name="keywords"
-    content="Robotics, Manipulation, Optimal Control, Control Barrier Functions, Operational Space Control">
+  <meta name="description" content="From Motion Tracking to Versatile Humanoid Control via Guided Diffusion">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>An Intuitive Multi-Task Manipulation Policy for Imitation Learning in Sim and Real Robots</title>
-
+  <title>BeyondMimic</title>
   <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
-
   <link rel="stylesheet" href="./static/css/bulma.min.css">
   <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
   <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
   <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
   <link rel="stylesheet" href="./static/css/index.css">
-  <link rel="icon" href="./static/images/favicon.svg">
-
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script defer src="./static/js/fontawesome.all.min.js"></script>
   <script src="./static/js/bulma-carousel.min.js"></script>
   <script src="./static/js/bulma-slider.min.js"></script>
   <script src="./static/js/index.js"></script>
-</head>
 
+  <style>
+    .full-screen-video {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      object-fit: cover;
+      z-index: -1;
+    }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: white;
+    }
+    .overlay {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      z-index: 1;
+    }
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 2rem;
+      padding: 2rem;
+    }
+    .video-item {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      overflow: hidden;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+    .video-item video {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      object-fit: cover;
+    }
+  </style>
+</head>
 <body>
 
-  <nav class="navbar" role="navigation" aria-label="main navigation">
-    <div class="navbar-brand">
-      <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
-      </a>
-    </div>
-    <div class="navbar-menu">
-      <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
-        <a class="navbar-item" href="https://danielpmorton.github.io/">
-          <span class="icon">
-            <svg class="svg-inline--fa fa-home fa-w-18" aria-hidden="true" focusable="false" data-prefix="fas"
-              data-icon="home" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" data-fa-i2svg="">
-              <path fill="currentColor"
-                d="M280.37 148.26L96 300.11V464a16 16 0 0 0 16 16l112.06-.29a16 16 0 0 0 15.92-16V368a16 16 0 0 1 16-16h64a16 16 0 0 1 16 16v95.64a16 16 0 0 0 16 16.05L464 480a16 16 0 0 0 16-16V300L295.67 148.26a12.19 12.19 0 0 0-15.3 0zM571.6 251.47L488 182.56V44.05a12 12 0 0 0-12-12h-56a12 12 0 0 0-12 12v72.61L318.47 43a48 48 0 0 0-61 0L4.34 251.47a12 12 0 0 0-1.6 16.9l25.5 31A12 12 0 0 0 45.15 301l235.22-193.74a12.19 12.19 0 0 1 15.3 0L530.9 301a12 12 0 0 0 16.9-1.6l25.5-31a12 12 0 0 0-1.7-16.93z">
-              </path>
-            </svg><!-- <i class="fas fa-home"></i> Font Awesome fontawesome.com -->
-          </span>
-        </a>
-    </div>
-  </nav>
+  <!-- Fullscreen Hero Video (1.mp4) -->
+  <section class="hero is-fullheight" style="position: relative; overflow: hidden;">
+    <video class="full-screen-video" playsinline autoplay muted loop>
+      <source src="1.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
 
-  <section class="hero">
-    <div class="hero-body">
-      <div class="container is-max-desktop">
-        <div class="columns is-centered">
-          <div class="column has-text-centered">
-            <h1 class="title is-1 publication-title">An Intuitive Multi-Task Manipulation Policy for Imitation Learning in Sim and Real Robots</h1>
-            <div class="is-size-5 publication-authors">
-              <span class="author-block">
-                <a>Yong Wang,</a> 
-              <span class="author-block">
-                <a>Chao  Xu</a> and </span>
-              <span class="author-block">
-                <a>Shengze Cai</a>
+    <div class="overlay"></div>
+
+    <!-- Top Navigation (Desktop only) -->
+    <div class="hero-head is-hidden-mobile">
+      <header class="navbar">
+        <div class="container is-size-5">
+          <div class="navbar-menu">
+            <div class="navbar-end">
+              <a class="navbar-item pl-4 pr-4" href="https://arxiv.org/abs/2508.08241" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">
+                <span class="icon" style="margin-right:5px;"><i class="ai ai-arxiv"></i></span>
+                <span>arXiv</span>
+              </a>
+              <a href="https://youtu.be/RS_MtKVIAzY" class="navbar-item pl-4 pr-4" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">
+                <span class="icon" style="margin-right:5px;"><i class="fab fa-youtube"></i></span>
+                <span>Video</span>
+              </a>
+              <span class="navbar-item pl-4 pr-4">
+                <a href="https://github.com/HybridRobotics/whole_body_tracking" class="button is-inverted is-large">
+                  <span class="icon"><i class="fab fa-github"></i></span>
+                  <span>Code</span>
+                </a>
               </span>
             </div>
+          </div>
+        </div>
+      </header>
+    </div>
 
-            <div class="is-size-5 publication-authors">
-              <span class="author-block">ZheJiang University</span>
-            </div>
+    <!-- Main Title & Authors -->
+    <div class="hero-body">
+      <div class="container has-text-centered hero-content">
+        <div>
+          <h1 class="title is-1 publication-title" style="font-size: 9rem; text-shadow: 2px 2px 8px rgba(0,0,0,0.9);">
+            BeyondMimic
+          </h1>
+          <h2 class="subtitle is-3" style="font-size: 3.5rem; margin-bottom: 2rem; text-shadow: 2px 2px 8px rgba(0,0,0,0.9);">
+            From Motion Tracking to Versatile Humanoid Control via Guided Diffusion
+          </h2>
+          <p style="font-size: 1.6rem; text-shadow: 2px 2px 6px rgba(0,0,0,0.9);">
+            <a href="https://qiayuanl.github.io/">Qiayuan Liao<sup>*</sup></a>,
+            <a href="https://www.takaratruong.com/">Takara Truong<sup>*</sup></a>,
+            <a href="">Xiaoyu Huang<sup>*</sup></a>,
+            <a href="https://guytevet.github.io/">Guy Tevet</a>,
+            <a href="https://hybrid-robotics.berkeley.edu/koushil/">Koushil Sreenath<sup>†</sup></a>,
+            <a href="https://tml.stanford.edu/people/karen-liu">C. Karen Liu<sup>†</sup></a>
+          </p>
 
-            <div class="column has-text-centered">
-              <div class="publication-links">
-                <!-- PDF Link. -->
-                <span class="link-block">
-                  <a href=" "
-                    class="external-link button is-normal is-rounded is-dark">
-                    <span class="icon">
-                      <i class="fas fa-file-pdf"></i>
-                    </span>
-                    <span>Paper</span>
-                  </a>
-                </span>
-
-                <!-- Code Link. -->
-                <span class="link-block">
-                  <a href=https://github.com/WangYong-999/roborpc"
-                    class="external-link button is-normal is-rounded is-dark">
-                    <span class="icon">
-                      <i class="fab fa-github"></i>
-                    </span>
-                    <span>Code (Coming soon)</span>
-                  </a>
-                </span>
-              </div>
-            </div>
+          <div style="margin-top: 1.5rem; font-size: 1rem; opacity: 0.9;">
+            <sup>*</sup> Equal contribution  <sup>†</sup> Equal advising
           </div>
         </div>
       </div>
-  </section>
-
-
-
-  <section class="section">
-    <div class="container is-max-desktop">
-      <!-- Abstract. -->
-      <div class="columns is-centered has-text-centered">
-        <div class="column is-four-fifths">
-          <!-- <h2 class="title is-3">Abstract</h2>
-          <div class="content has-text-justified">
-            <p> -->
-              <!-- Imitation learning draws on human demonstration mechanisms and exhibits excellent skill acquisition performance. To explore the efficiency-enhancing mechanisms of human demonstration in the joint space and the robustness of multi-task imitation, we propose a novel approach, MIRO (An Intuitive Multi-Task \underline{M}anipulation Policy for \underline{I}mitation Learning in Simulated and Real \underline{Ro}bots). First, we design a constrained joint alignment teleoperation (CJAT) approach. By incorporating kinematic, smoothness, collision, and contact constraints into joint control, we enable the robot's imitation motion to be intuitively human while maintaining good stability and acquisition efficiency. Second, we design a multi-task context-fusion imitation (MT-CFI) strategy. By integrating language-guided encoding, multi-scale context enhancement, and gated feature fusion mechanisms, we improve multimodal trajectory learning and enhance its adaptability to diverse tasks in diverse scenarios. Finally, we validate MIRO's effectiveness by applying it to simulated and real robotic manipulation tasks and present a set of evaluation results, demonstrating its potential in various applications. -->
-            <!-- </p> -->
-          <!-- </div> -->
-        </div>
-      </div>
-      <!-- / Abstract. -->
-
-      <div class="columns is-centered has-text-centered">
-        <div class="column is-four-fifths">
-          <h2 class="title is-3">Multi-Task Comparison</h2>
-        </div>
-      </div>
-
-      <section class="section" style="padding-top: 1rem; padding-bottom: 0rem;">
-        <div class="container">
-          <div class="columns is-centered">
-            <div class="column has-text-centered">
-              <h3 class="title is-4">Sim Task #1</h3>
-              <p>"This video shows our algorithm controlling a robot to fasten a round nut onto a square peg."</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="section">
-        <div class="container">
-          <div class="columns is-centered">
-            <!-- First video column -->
-            <div class="column is-3">
-              <div class="video-container" style="text-align: center;">
-                <div class="video-wrapper"
-                  style="height: 250px; display: flex; align-items: center; justify-content: center;">
-                  <video id="video-1" autoplay controls muted loop playsinline
-                    style="max-width: 100%; max-height: 100%; margin: 0 auto;">
-                    <source src="./static/videos/policy_io_Attach_the_round_nut_to_the_round_peg_rollout_1_success.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-                <p class="video-caption" style="margin-top: 10px; text-align: center;">Rollout 1</p>
-              </div>
-            </div>
-
-            <!-- Second video column -->
-            <div class="column is-3">
-              <div class="video-container" style="text-align: center;">
-                <div class="video-wrapper"
-                  style="height: 250px; display: flex; align-items: center; justify-content: center;">
-                  <video id="video-2" autoplay controls muted loop playsinline
-                    style="max-width: 100%; max-height: 100%; margin: 0 auto;">
-                    <source src="./static/videos/policy_io_Attach_the_round_nut_to_the_round_peg_rollout_2_success.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-                <p class="video-caption" style="margin-top: 10px; text-align: center;">Rollout 2</p>
-              </div>
-            </div>
-
-            <!-- Third video column -->
-            <div class="column is-3">
-              <div class="video-container" style="text-align: center;">
-                <div class="video-wrapper"
-                  style="height: 250px; display: flex; align-items: center; justify-content: center;">
-                  <video id="video-3" autoplay controls muted loop playsinline
-                    style="max-width: 100%; max-height: 100%; margin: 0 auto;">
-                    <source src="./static/videos/policy_io_Attach_the_round_nut_to_the_round_peg_rollout_3_success.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-                <p class="video-caption" style="margin-top: 10px; text-align: center;">Rollout 3</p>
-              </div>
-            </div>
-
-            <!-- Fourth video column -->
-            <div class="column is-3">
-              <div class="video-container" style="text-align: center;">
-                <div class="video-wrapper"
-                  style="height: 250px; display: flex; align-items: center; justify-content: center;">
-                  <video id="video-4" autoplay controls muted loop playsinline
-                    style="max-width: 100%; max-height: 100%; margin: 0 auto;">
-                    <source src="./static/videos/policy_io_Attach_the_round_nut_to_the_round_peg_rollout_4_success.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-                <p class="video-caption" style="margin-top: 10px; text-align: center;">Rollout 4</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      
-      <section class="section" style="padding-top: 1rem; padding-bottom: 0rem;">
-        <div class="container">
-          <div class="columns is-centered">
-            <div class="column has-text-centered">
-              <h3 class="title is-4">Sim Task #2</h3>
-              <p>"This video shows our algorithm controlling a robot to grab a red brick."</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="section">
-        <div class="container">
-          <div class="columns is-centered">
-            <!-- First video column -->
-            <div class="column is-3">
-              <div class="video-container" style="text-align: center;">
-                <div class="video-wrapper"
-                  style="height: 250px; display: flex; align-items: center; justify-content: center;">
-                  <video id="video-1" autoplay controls muted loop playsinline
-                    style="max-width: 100%; max-height: 100%; margin: 0 auto;">
-                    <source src="./static/videos/policy_io_Grasp_the_block_rollout_1_success.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-                <p class="video-caption" style="margin-top: 10px; text-align: center;">Rollout 1</p>
-              </div>
-            </div>
-
-            <!-- Second video column -->
-            <div class="column is-3">
-              <div class="video-container" style="text-align: center;">
-                <div class="video-wrapper"
-                  style="height: 250px; display: flex; align-items: center; justify-content: center;">
-                  <video id="video-2" autoplay controls muted loop playsinline
-                    style="max-width: 100%; max-height: 100%; margin: 0 auto;">
-                    <source src="./static/videos/policy_io_Grasp_the_block_rollout_2_success.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-                <p class="video-caption" style="margin-top: 10px; text-align: center;">Rollout 2</p>
-              </div>
-            </div>
-
-            <!-- Third video column -->
-            <div class="column is-3">
-              <div class="video-container" style="text-align: center;">
-                <div class="video-wrapper"
-                  style="height: 250px; display: flex; align-items: center; justify-content: center;">
-                  <video id="video-3" autoplay controls muted loop playsinline
-                    style="max-width: 100%; max-height: 100%; margin: 0 auto;">
-                    <source src="./static/videos/policy_io_Grasp_the_block_rollout_3_success.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-                <p class="video-caption" style="margin-top: 10px; text-align: center;">Rollout 3</p>
-              </div>
-            </div>
-
-            <!-- Fourth video column -->
-            <div class="column is-3">
-              <div class="video-container" style="text-align: center;">
-                <div class="video-wrapper"
-                  style="height: 250px; display: flex; align-items: center; justify-content: center;">
-                  <video id="video-4" autoplay controls muted loop playsinline
-                    style="max-width: 100%; max-height: 100%; margin: 0 auto;">
-                    <source src="./static/videos/policy_io_Grasp_the_block_rollout_4_success.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-                <p class="video-caption" style="margin-top: 10px; text-align: center;">Rollout 4</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      
-      <section class="section" style="padding-top: 1rem; padding-bottom: 0rem;">
-        <div class="container">
-          <div class="columns is-centered">
-            <div class="column has-text-centered">
-              <h3 class="title is-4">Sim Task #3</h3>
-              <p>"This video shows our algorithm controlling a robot to turn a handle to open a door. "</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="section">
-        <div class="container">
-          <div class="columns is-centered">
-            <!-- First video column -->
-            <div class="column is-3">
-              <div class="video-container" style="text-align: center;">
-                <div class="video-wrapper"
-                  style="height: 250px; display: flex; align-items: center; justify-content: center;">
-                  <video id="video-1" autoplay controls muted loop playsinline
-                    style="max-width: 100%; max-height: 100%; margin: 0 auto;">
-                    <source src="./static/videos/policy_io_Turn_the_handle_and_open_the_door_rollout_1_success.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-                <p class="video-caption" style="margin-top: 10px; text-align: center;">Rollout 1</p>
-              </div>
-            </div>
-
-            <!-- Second video column -->
-            <div class="column is-3">
-              <div class="video-container" style="text-align: center;">
-                <div class="video-wrapper"
-                  style="height: 250px; display: flex; align-items: center; justify-content: center;">
-                  <video id="video-2" autoplay controls muted loop playsinline
-                    style="max-width: 100%; max-height: 100%; margin: 0 auto;">
-                    <source src="./static/videos/policy_io_Turn_the_handle_and_open_the_door_rollout_2_success.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-                <p class="video-caption" style="margin-top: 10px; text-align: center;">Rollout 2</p>
-              </div>
-            </div>
-
-            <!-- Third video column -->
-            <div class="column is-3">
-              <div class="video-container" style="text-align: center;">
-                <div class="video-wrapper"
-                  style="height: 250px; display: flex; align-items: center; justify-content: center;">
-                  <video id="video-3" autoplay controls muted loop playsinline
-                    style="max-width: 100%; max-height: 100%; margin: 0 auto;">
-                    <source src="./static/videos/policy_io_Turn_the_handle_and_open_the_door_rollout_3_success.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-                <p class="video-caption" style="margin-top: 10px; text-align: center;">Rollout 3</p>
-              </div>
-            </div>
-
-            <!-- Fourth video column -->
-            <div class="column is-3">
-              <div class="video-container" style="text-align: center;">
-                <div class="video-wrapper"
-                  style="height: 250px; display: flex; align-items: center; justify-content: center;">
-                  <video id="video-4" autoplay controls muted loop playsinline
-                    style="max-width: 100%; max-height: 100%; margin: 0 auto;">
-                    <source src="./static/videos/policy_io_Turn_the_handle_and_open_the_door_rollout_4_success.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-                <p class="video-caption" style="margin-top: 10px; text-align: center;">Rollout 4</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      
-      <section class="section" style="padding-top: 1rem; padding-bottom: 0rem;">
-        <div class="container">
-          <div class="columns is-centered">
-            <div class="column has-text-centered">
-              <h3 class="title is-4">Sim Task #4</h3>
-              <p>"This video shows our algorithm controlling a robot to place randomly placed red bricks on top of green bricks. "</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="section">
-        <div class="container">
-          <div class="columns is-centered">
-            <!-- First video column -->
-            <div class="column is-3">
-              <div class="video-container" style="text-align: center;">
-                <div class="video-wrapper"
-                  style="height: 250px; display: flex; align-items: center; justify-content: center;">
-                  <video id="video-1" autoplay controls muted loop playsinline
-                    style="max-width: 100%; max-height: 100%; margin: 0 auto;">
-                    <source src="./static/videos/policy_io_Stack_the_red_square_on_top_of_the_blue_square_rollout_1_success.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-                <p class="video-caption" style="margin-top: 10px; text-align: center;">Rollout 1</p>
-              </div>
-            </div>
-
-            <!-- Second video column -->
-            <div class="column is-3">
-              <div class="video-container" style="text-align: center;">
-                <div class="video-wrapper"
-                  style="height: 250px; display: flex; align-items: center; justify-content: center;">
-                  <video id="video-2" autoplay controls muted loop playsinline
-                    style="max-width: 100%; max-height: 100%; margin: 0 auto;">
-                    <source src="./static/videos/policy_io_Stack_the_red_square_on_top_of_the_blue_square_rollout_2_success.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-                <p class="video-caption" style="margin-top: 10px; text-align: center;">Rollout 2</p>
-              </div>
-            </div>
-
-            <!-- Third video column -->
-            <div class="column is-3">
-              <div class="video-container" style="text-align: center;">
-                <div class="video-wrapper"
-                  style="height: 250px; display: flex; align-items: center; justify-content: center;">
-                  <video id="video-3" autoplay controls muted loop playsinline
-                    style="max-width: 100%; max-height: 100%; margin: 0 auto;">
-                    <source src="./static/videos/policy_io_Stack_the_red_square_on_top_of_the_blue_square_rollout_3_success.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-                <p class="video-caption" style="margin-top: 10px; text-align: center;">Rollout 3</p>
-              </div>
-            </div>
-
-            <!-- Fourth video column -->
-            <div class="column is-3">
-              <div class="video-container" style="text-align: center;">
-                <div class="video-wrapper"
-                  style="height: 250px; display: flex; align-items: center; justify-content: center;">
-                  <video id="video-4" autoplay controls muted loop playsinline
-                    style="max-width: 100%; max-height: 100%; margin: 0 auto;">
-                    <source src="./static/videos/policy_io_Stack_the_red_square_on_top_of_the_blue_square_rollout_5_success.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-                <p class="video-caption" style="margin-top: 10px; text-align: center;">Rollout 4</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-
-      <section class="section" style="padding-top: 1rem; padding-bottom: 0rem;">
-        <div class="container">
-          <div class="columns is-centered">
-            <div class="column has-text-centered">
-              <h3 class="title is-4">Real Task #1</h3>
-              <p>"The video shows that our method can control the robot to grab a randomly placed sponge and wipe the tabletop along the white stripes with appropriate force."</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="section">
-        <div class="container">
-          <div class="columns is-centered">
-            <!-- First video column -->
-            <div class="column is-3">
-              <div class="video-container" style="text-align: center;">
-                <div class="video-wrapper"
-                  style="height: 250px; display: flex; align-items: center; justify-content: center;">
-                  <video id="video-1" autoplay controls muted loop playsinline
-                    style="max-width: 100%; max-height: 100%; margin: 0 auto;">
-                    <source src="./static/videos/policy_io_Wipe_the_table_rollout_1_success.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-                <p class="video-caption" style="margin-top: 10px; text-align: center;">Rollout 1</p>
-              </div>
-            </div>
-
-            <!-- Second video column -->
-            <div class="column is-3">
-              <div class="video-container" style="text-align: center;">
-                <div class="video-wrapper"
-                  style="height: 250px; display: flex; align-items: center; justify-content: center;">
-                  <video id="video-2" autoplay controls muted loop playsinline
-                    style="max-width: 100%; max-height: 100%; margin: 0 auto;">
-                    <source src="./static/videos/policy_io_Wipe_the_table_rollout_3_success.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-                <p class="video-caption" style="margin-top: 10px; text-align: center;">Rollout 2</p>
-              </div>
-            </div>
-
-            <!-- Third video column -->
-            <div class="column is-3">
-              <div class="video-container" style="text-align: center;">
-                <div class="video-wrapper"
-                  style="height: 250px; display: flex; align-items: center; justify-content: center;">
-                  <video id="video-3" autoplay controls muted loop playsinline
-                    style="max-width: 100%; max-height: 100%; margin: 0 auto;">
-                    <source src="./static/videos/policy_io_Wipe_the_table_rollout_6_success.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-                <p class="video-caption" style="margin-top: 10px; text-align: center;">Rollout 3</p>
-              </div>
-            </div>
-
-            <!-- Fourth video column -->
-            <div class="column is-3">
-              <div class="video-container" style="text-align: center;">
-                <div class="video-wrapper"
-                  style="height: 250px; display: flex; align-items: center; justify-content: center;">
-                  <video id="video-4" autoplay controls muted loop playsinline
-                    style="max-width: 100%; max-height: 100%; margin: 0 auto;">
-                    <source src="./static/videos/policy_io_Wipe_the_table_rollout_8_success.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-                <p class="video-caption" style="margin-top: 10px; text-align: center;">Rollout 4</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="section" style="padding-top: 1rem; padding-bottom: 0rem;">
-        <div class="container">
-          <div class="columns is-centered">
-            <div class="column has-text-centered">
-              <h3 class="title is-4">Real Task #2</h3>
-              <p>"This video demonstrates our method controlling a robot to grasp a randomly occluded white 3D-printed part and place it in a white box."</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="section">
-        <div class="container">
-          <div class="columns is-centered">
-            <!-- First video column -->
-            <div class="column is-3">
-              <div class="video-container" style="text-align: center;">
-                <div class="video-wrapper"
-                  style="height: 250px; display: flex; align-items: center; justify-content: center;">
-                  <video id="video-1" autoplay controls muted loop playsinline
-                    style="max-width: 100%; max-height: 100%; margin: 0 auto;">
-                    <source src="./static/videos/policy_io_Grasp_the_white_3D_printed_object_and_put_it_into_the_white_box_rollout_1_success.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-                <p class="video-caption" style="margin-top: 10px; text-align: center;">Rollout 1</p>
-              </div>
-            </div>
-
-            <!-- Second video column -->
-            <div class="column is-3">
-              <div class="video-container" style="text-align: center;">
-                <div class="video-wrapper"
-                  style="height: 250px; display: flex; align-items: center; justify-content: center;">
-                  <video id="video-2" autoplay controls muted loop playsinline
-                    style="max-width: 100%; max-height: 100%; margin: 0 auto;">
-                    <source src="./static/videos/policy_io_Grasp_the_white_3D_printed_object_and_put_it_into_the_white_box_rollout_6-origin_success.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-                <p class="video-caption" style="margin-top: 10px; text-align: center;">Rollout 2</p>
-              </div>
-            </div>
-
-            <!-- Third video column -->
-            <div class="column is-3">
-              <div class="video-container" style="text-align: center;">
-                <div class="video-wrapper"
-                  style="height: 250px; display: flex; align-items: center; justify-content: center;">
-                  <video id="video-3" autoplay controls muted loop playsinline
-                    style="max-width: 100%; max-height: 100%; margin: 0 auto;">
-                    <source src="./static/videos/policy_io_Grasp_the_white_3D_printed_object_and_put_it_into_the_white_box_rollout_103_success.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-                <p class="video-caption" style="margin-top: 10px; text-align: center;">Rollout 3</p>
-              </div>
-            </div>
-
-            <!-- Fourth video column -->
-            <div class="column is-3">
-              <div class="video-container" style="text-align: center;">
-                <div class="video-wrapper"
-                  style="height: 250px; display: flex; align-items: center; justify-content: center;">
-                  <video id="video-4" autoplay controls muted loop playsinline
-                    style="max-width: 100%; max-height: 100%; margin: 0 auto;">
-                    <source src="./static/videos/policy_io_Grasp_the_white_3D_printed_object_and_put_it_into_the_white_box_rollout_114_success.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-                <p class="video-caption" style="margin-top: 10px; text-align: center;">Rollout 4</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="section" style="padding-top: 1rem; padding-bottom: 0rem;">
-        <div class="container">
-          <div class="columns is-centered">
-            <div class="column has-text-centered">
-              <h3 class="title is-4">Real Task #3</h3>
-              <p>"This video demonstrates our method controlling a robot to grasp randomly placed micro-zipper buckles, zip them up, and then close a backpack."</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="section">
-        <div class="container">
-          <div class="columns is-centered">
-            <!-- First video column -->
-            <div class="column is-3">
-              <div class="video-container" style="text-align: center;">
-                <div class="video-wrapper"
-                  style="height: 250px; display: flex; align-items: center; justify-content: center;">
-                  <video id="video-1" autoplay controls muted loop playsinline
-                    style="max-width: 100%; max-height: 100%; margin: 0 auto;">
-                    <source src="./static/videos/policy_io_Zip_up_your_backpack_and_close_your_backpack_rollout_4_success.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-                <p class="video-caption" style="margin-top: 10px; text-align: center;">Rollout 1</p>
-              </div>
-            </div>
-
-            <!-- Second video column -->
-            <div class="column is-3">
-              <div class="video-container" style="text-align: center;">
-                <div class="video-wrapper"
-                  style="height: 250px; display: flex; align-items: center; justify-content: center;">
-                  <video id="video-2" autoplay controls muted loop playsinline
-                    style="max-width: 100%; max-height: 100%; margin: 0 auto;">
-                    <source src="./static/videos/policy_io_Zip_up_your_backpack_and_close_your_backpack_rollout_12_success.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-                <p class="video-caption" style="margin-top: 10px; text-align: center;">Rollout 2</p>
-              </div>
-            </div>
-
-            <!-- Third video column -->
-            <div class="column is-3">
-              <div class="video-container" style="text-align: center;">
-                <div class="video-wrapper"
-                  style="height: 250px; display: flex; align-items: center; justify-content: center;">
-                  <video id="video-3" autoplay controls muted loop playsinline
-                    style="max-width: 100%; max-height: 100%; margin: 0 auto;">
-                    <source src="./static/videos/policy_io_Zip_up_your_backpack_and_close_your_backpack_rollout_31_success.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-                <p class="video-caption" style="margin-top: 10px; text-align: center;">Rollout 3</p>
-              </div>
-            </div>
-
-            <!-- Fourth video column -->
-            <div class="column is-3">
-              <div class="video-container" style="text-align: center;">
-                <div class="video-wrapper"
-                  style="height: 250px; display: flex; align-items: center; justify-content: center;">
-                  <video id="video-4" autoplay controls muted loop playsinline
-                    style="max-width: 100%; max-height: 100%; margin: 0 auto;">
-                    <source src="./static/videos/policy_io_Zip_up_your_backpack_and_close_your_backpack_rollout_36_success.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-                <p class="video-caption" style="margin-top: 10px; text-align: center;">Rollout 4</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="section" style="padding-top: 1rem; padding-bottom: 0rem;">
-        <div class="container">
-          <div class="columns is-centered">
-            <div class="column has-text-centered">
-              <h3 class="title is-4">Real Task #4</h3>
-              <p>"This video demonstrates how our method can control a robot to grasp a tiny, low-texture weight and precisely insert it into a snug-fitting hole.."</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="section">
-        <div class="container">
-          <div class="columns is-centered">
-            <!-- First video column -->
-            <div class="column is-3">
-              <div class="video-container" style="text-align: center;">
-                <div class="video-wrapper"
-                  style="height: 250px; display: flex; align-items: center; justify-content: center;">
-                  <video id="video-1" autoplay controls muted loop playsinline
-                    style="max-width: 100%; max-height: 100%; margin: 0 auto;">
-                    <source src="./static/videos/policy_io_Put_the_weights_into_the_box_rollout_21_success.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-                <p class="video-caption" style="margin-top: 10px; text-align: center;">Rollout 1</p>
-              </div>
-            </div>
-
-            <!-- Second video column -->
-            <div class="column is-3">
-              <div class="video-container" style="text-align: center;">
-                <div class="video-wrapper"
-                  style="height: 250px; display: flex; align-items: center; justify-content: center;">
-                  <video id="video-2" autoplay controls muted loop playsinline
-                    style="max-width: 100%; max-height: 100%; margin: 0 auto;">
-                    <source src="./static/videos/policy_io_Put_the_weights_into_the_box_rollout_25_success.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-                <p class="video-caption" style="margin-top: 10px; text-align: center;">Rollout 2</p>
-              </div>
-            </div>
-
-            <!-- Third video column -->
-            <div class="column is-3">
-              <div class="video-container" style="text-align: center;">
-                <div class="video-wrapper"
-                  style="height: 250px; display: flex; align-items: center; justify-content: center;">
-                  <video id="video-3" autoplay controls muted loop playsinline
-                    style="max-width: 100%; max-height: 100%; margin: 0 auto;">
-                    <source src="./static/videos/policy_io_Put_the_weights_into_the_box_rollout_28_success.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-                <p class="video-caption" style="margin-top: 10px; text-align: center;">Rollout 3</p>
-              </div>
-            </div>
-
-            <!-- Fourth video column -->
-            <div class="column is-3">
-              <div class="video-container" style="text-align: center;">
-                <div class="video-wrapper"
-                  style="height: 250px; display: flex; align-items: center; justify-content: center;">
-                  <video id="video-4" autoplay controls muted loop playsinline
-                    style="max-width: 100%; max-height: 100%; margin: 0 auto;">
-                    <source src="./static/videos/policy_io_Put_the_weights_into_the_box_rollout_33_success.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-                <p class="video-caption" style="margin-top: 10px; text-align: center;">Rollout 4</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="section" style="padding-top: 1rem; padding-bottom: 0rem;">
-        <div class="container">
-          <div class="columns is-centered">
-            <div class="column has-text-centered">
-              <h3 class="title is-4">Dynamic Task</h3>
-              <p>"The 'Dynamic Task' requires the robot to use a closed gripper to push a blue ball into a white box within three times. The ball clearly follows a dynamic trajectory after being pushed out."</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="section">
-        <div class="container">
-          <div class="columns is-centered">
-            <!-- First video column -->
-            <div class="column">
-              <div class="video-container" style="text-align: center;">
-                <div class="video-wrapper"
-                  style="height: 250px; display: flex; align-items: center; justify-content: center;">
-                  <video id="video-1" autoplay controls muted loop playsinline
-                    style="max-width: 100%; max-height: 100%; margin: 0 auto;">
-                    <source src="./static/videos/policy_io_Push_the_blue_ball_into_the_white_square_rollout_13_failure.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-                <p class="video-caption" style="margin-top: 10px; text-align: center;">RT-1</p>
-              </div>
-            </div>
-
-            <!-- Second video column -->
-            <div class="column">
-              <div class="video-container" style="text-align: center;">
-                <div class="video-wrapper"
-                  style="height: 250px; display: flex; align-items: center; justify-content: center;">
-                  <video id="video-2" autoplay controls muted loop playsinline
-                    style="max-width: 100%; max-height: 100%; margin: 0 auto;">
-                    <source src="./static/videos/policy_io_Push_the_blue_ball_into_the_white_square_rollout_16_failure.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-                <p class="video-caption" style="margin-top: 10px; text-align: center;">Octo</p>
-              </div>
-            </div>
-
-            <!-- Third video column -->
-            <div class="column">
-              <div class="video-container" style="text-align: center;">
-                <div class="video-wrapper"
-                  style="height: 250px; display: flex; align-items: center; justify-content: center;">
-                  <video id="video-3" autoplay controls muted loop playsinline
-                    style="max-width: 100%; max-height: 100%; margin: 0 auto;">
-                    <source src="./static/videos/policy_io_Push_the_blue_ball_into_the_white_square_rollout_26_failure.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-                <p class="video-caption" style="margin-top: 10px; text-align: center;">Baku</p>
-              </div>
-            </div>
-
-            <!-- Fourth video column -->
-            <div class="column">
-              <div class="video-container" style="text-align: center;">
-                <div class="video-wrapper"
-                  style="height: 250px; display: flex; align-items: center; justify-content: center;">
-                  <video id="video-4" autoplay controls muted loop playsinline
-                    style="max-width: 100%; max-height: 100%; margin: 0 auto;">
-                    <source src="./static/videos/policy_io_Push_the_blue_ball_into_the_white_square_rollout_35_failure.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-                <p class="video-caption" style="margin-top: 10px; text-align: center;">MTACT-18</p>
-              </div>
-            </div>
-
-            <!-- Fifth video column -->
-            <div class="column">
-              <div class="video-container" style="text-align: center;">
-                <div class="video-wrapper"
-                  style="height: 250px; display: flex; align-items: center; justify-content: center;">
-                  <video id="video-5" autoplay controls muted loop playsinline
-                    style="max-width: 100%; max-height: 100%; margin: 0 auto;">
-                    <source src="./static/videos/policy_io_Push_the_blue_ball_into_the_white_square_rollout_57_success.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-                <p class="video-caption" style="margin-top: 10px; text-align: center;">MTACT-34</p>
-              </div>
-            </div>
-
-            <!-- Sixth video column -->
-            <div class="column">
-              <div class="video-container" style="text-align: center;">
-                <div class="video-wrapper"
-                  style="height: 250px; display: flex; align-items: center; justify-content: center;">
-                  <video id="video-6" autoplay controls muted loop playsinline
-                    style="max-width: 100%; max-height: 100%; margin: 0 auto;">
-                    <source src="./static/videos/policy_io_Push_the_blue_ball_into_the_white_square_rollout_79_success.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-                <p class="video-caption" style="margin-top: 10px; text-align: center;">MTACT-101</p>
-              </div>
-            </div>
-
-            <!-- Seventh video column -->
-            <div class="column">
-              <div class="video-container" style="text-align: center;">
-                <div class="video-wrapper"
-                  style="height: 250px; display: flex; align-items: center; justify-content: center;">
-                  <video id="video-7" autoplay controls muted loop playsinline
-                    style="max-width: 100%; max-height: 100%; margin: 0 auto;">
-                    <source src="./static/videos/policy_io_Push_the_blue_ball_into_the_white_square_rollout_37_success.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-                <p class="video-caption" style="margin-top: 10px; text-align: center;">Ours</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="section" style="padding-top: 1rem; padding-bottom: 0rem;">
-        <div class="container">
-          <div class="columns is-centered">
-            <div class="column has-text-centered">
-              <h3 class="title is-4">Random Occlusion and Blur Task</h3>
-              <p>"The 'Random Occlusion and Blur Task' requires the robot to grasp a white print and place it into a white box while three camera images are randomly occluded and blurred."</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-     <section class="section">
-        <div class="container">
-          <div class="columns is-centered">
-            <!-- First video column -->
-            <div class="column">
-              <div class="video-container" style="text-align: center;">
-                <div class="video-wrapper"
-                  style="height: 250px; display: flex; align-items: center; justify-content: center;">
-                  <video id="video-1" autoplay controls muted loop playsinline
-                    style="max-width: 100%; max-height: 100%; margin: 0 auto;">
-                    <source src="./static/videos/policy_io_Grasp_the_white_3D_printed_object_and_put_it_into_the_white_box_rollout_1_failure.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-                <p class="video-caption" style="margin-top: 10px; text-align: center;">RT-1</p>
-              </div>
-            </div>
-
-            <!-- Second video column -->
-            <div class="column">
-              <div class="video-container" style="text-align: center;">
-                <div class="video-wrapper"
-                  style="height: 250px; display: flex; align-items: center; justify-content: center;">
-                  <video id="video-2" autoplay controls muted loop playsinline
-                    style="max-width: 100%; max-height: 100%; margin: 0 auto;">
-                    <source src="./static/videos/policy_io_Grasp_the_white_3D_printed_object_and_put_it_into_the_white_box_rollout_2_failure.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-                <p class="video-caption" style="margin-top: 10px; text-align: center;">Octo</p>
-              </div>
-            </div>
-
-            <!-- Third video column -->
-            <div class="column">
-              <div class="video-container" style="text-align: center;">
-                <div class="video-wrapper"
-                  style="height: 250px; display: flex; align-items: center; justify-content: center;">
-                  <video id="video-3" autoplay controls muted loop playsinline
-                    style="max-width: 100%; max-height: 100%; margin: 0 auto;">
-                    <source src="./static/videos/policy_io_Grasp_the_white_3D_printed_object_and_put_it_into_the_white_box_rollout_3_failure.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-                <p class="video-caption" style="margin-top: 10px; text-align: center;">Baku</p>
-              </div>
-            </div>
-
-            <!-- Fourth video column -->
-            <div class="column">
-              <div class="video-container" style="text-align: center;">
-                <div class="video-wrapper"
-                  style="height: 250px; display: flex; align-items: center; justify-content: center;">
-                  <video id="video-4" autoplay controls muted loop playsinline
-                    style="max-width: 100%; max-height: 100%; margin: 0 auto;">
-                    <source src="./static/videos/policy_io_Grasp_the_white_3D_printed_object_and_put_it_into_the_white_box_rollout_4_failure.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-                <p class="video-caption" style="margin-top: 10px; text-align: center;">MTACT-18</p>
-              </div>
-            </div>
-
-            <!-- Fifth video column -->
-            <div class="column">
-              <div class="video-container" style="text-align: center;">
-                <div class="video-wrapper"
-                  style="height: 250px; display: flex; align-items: center; justify-content: center;">
-                  <video id="video-5" autoplay controls muted loop playsinline
-                    style="max-width: 100%; max-height: 100%; margin: 0 auto;">
-                    <source src="./static/videos/policy_io_Grasp_the_white_3D_printed_object_and_put_it_into_the_white_box_rollout_5_failure.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-                <p class="video-caption" style="margin-top: 10px; text-align: center;">MTACT-34</p>
-              </div>
-            </div>
-
-            <!-- Sixth video column -->
-            <div class="column">
-              <div class="video-container" style="text-align: center;">
-                <div class="video-wrapper"
-                  style="height: 250px; display: flex; align-items: center; justify-content: center;">
-                  <video id="video-6" autoplay controls muted loop playsinline
-                    style="max-width: 100%; max-height: 100%; margin: 0 auto;">
-                    <source src="./static/videos/policy_io_Grasp_the_white_3D_printed_object_and_put_it_into_the_white_box_rollout_7_failure.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-                <p class="video-caption" style="margin-top: 10px; text-align: center;">MTACT-101</p>
-              </div>
-            </div>
-
-            <!-- Seventh video column -->
-            <div class="column">
-              <div class="video-container" style="text-align: center;">
-                <div class="video-wrapper"
-                  style="height: 250px; display: flex; align-items: center; justify-content: center;">
-                  <video id="video-7" autoplay controls muted loop playsinline
-                    style="max-width: 100%; max-height: 100%; margin: 0 auto;">
-                    <source src="./static/videos/policy_io_Grasp_the_white_3D_printed_object_and_put_it_into_the_white_box_rollout_8_success.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-                <p class="video-caption" style="margin-top: 10px; text-align: center;">Ours</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="section" style="padding-top: 1rem; padding-bottom: 0rem;">
-        <div class="container">
-          <div class="columns is-centered">
-            <div class="column has-text-centered">
-              <h3 class="title is-4">Long Horizon Task</h3>
-              <p>"The 'Long Horizon Task' requires the robot to fold a deformable pair of white shorts."</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-     <section class="section">
-        <div class="container">
-          <div class="columns is-centered">
-            <!-- First video column -->
-            <div class="column">
-              <div class="video-container" style="text-align: center;">
-                <div class="video-wrapper"
-                  style="height: 250px; display: flex; align-items: center; justify-content: center;">
-                  <video id="video-1" autoplay controls muted loop playsinline
-                    style="max-width: 100%; max-height: 100%; margin: 0 auto;">
-                    <source src="./static/videos/policy_io_Fold_the_white_shorts_rollout_4_failure.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-                <p class="video-caption" style="margin-top: 10px; text-align: center;">RT-1</p>
-              </div>
-            </div>
-
-            <!-- Second video column -->
-            <div class="column">
-              <div class="video-container" style="text-align: center;">
-                <div class="video-wrapper"
-                  style="height: 250px; display: flex; align-items: center; justify-content: center;">
-                  <video id="video-2" autoplay controls muted loop playsinline
-                    style="max-width: 100%; max-height: 100%; margin: 0 auto;">
-                    <source src="./static/videos/policy_io_Fold_the_white_shorts_rollout_8_failure.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-                <p class="video-caption" style="margin-top: 10px; text-align: center;">Octo</p>
-              </div>
-            </div>
-
-            <!-- Third video column -->
-            <div class="column">
-              <div class="video-container" style="text-align: center;">
-                <div class="video-wrapper"
-                  style="height: 250px; display: flex; align-items: center; justify-content: center;">
-                  <video id="video-3" autoplay controls muted loop playsinline
-                    style="max-width: 100%; max-height: 100%; margin: 0 auto;">
-                    <source src="./static/videos/policy_io_Fold_the_white_shorts_rollout_12_failure.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-                <p class="video-caption" style="margin-top: 10px; text-align: center;">Baku</p>
-              </div>
-            </div>
-
-            <!-- Fourth video column -->
-            <div class="column">
-              <div class="video-container" style="text-align: center;">
-                <div class="video-wrapper"
-                  style="height: 250px; display: flex; align-items: center; justify-content: center;">
-                  <video id="video-4" autoplay controls muted loop playsinline
-                    style="max-width: 100%; max-height: 100%; margin: 0 auto;">
-                    <source src="./static/videos/policy_io_Fold_the_white_shorts_rollout_13_failure.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-                <p class="video-caption" style="margin-top: 10px; text-align: center;">MTACT-18</p>
-              </div>
-            </div>
-
-            <!-- Fifth video column -->
-            <div class="column">
-              <div class="video-container" style="text-align: center;">
-                <div class="video-wrapper"
-                  style="height: 250px; display: flex; align-items: center; justify-content: center;">
-                  <video id="video-5" autoplay controls muted loop playsinline
-                    style="max-width: 100%; max-height: 100%; margin: 0 auto;">
-                    <source src="./static/videos/policy_io_Fold_the_white_shorts_rollout_14_failure.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-                <p class="video-caption" style="margin-top: 10px; text-align: center;">MTACT-34</p>
-              </div>
-            </div>
-
-            <!-- Sixth video column -->
-            <div class="column">
-              <div class="video-container" style="text-align: center;">
-                <div class="video-wrapper"
-                  style="height: 250px; display: flex; align-items: center; justify-content: center;">
-                  <video id="video-6" autoplay controls muted loop playsinline
-                    style="max-width: 100%; max-height: 100%; margin: 0 auto;">
-                    <source src="./static/videos/policy_io_Fold_the_white_shorts_rollout_15_failure.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-                <p class="video-caption" style="margin-top: 10px; text-align: center;">MTACT-101</p>
-              </div>
-            </div>
-
-            <!-- Seventh video column -->
-            <div class="column">
-              <div class="video-container" style="text-align: center;">
-                <div class="video-wrapper"
-                  style="height: 250px; display: flex; align-items: center; justify-content: center;">
-                  <video id="video-7" autoplay controls muted loop playsinline
-                    style="max-width: 100%; max-height: 100%; margin: 0 auto;">
-                    <source src="./static/videos/policy_io_Fold_the_white_shorts_rollout_3_success.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-                <p class="video-caption" style="margin-top: 10px; text-align: center;">Ours</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-      
-      <section class="section" style="padding-top: 1rem; padding-bottom: 0rem;">
-        <div class="container">
-          <div class="columns is-centered">
-            <div class="column has-text-centered">
-              <h3 class="title is-4">Noise Task</h3>
-              <p>"The 'Noise Task' requires the robot to complete the tasks of zipping and closing a backpack while being subjected to noise interference of an amplitude of [0, 0.05] rad at each joint position."</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="section">
-        <div class="container">
-          <div class="columns is-centered">
-            <!-- First video column -->
-            <div class="column">
-              <div class="video-container" style="text-align: center;">
-                <div class="video-wrapper"
-                  style="height: 250px; display: flex; align-items: center; justify-content: center;">
-                  <video id="video-1" autoplay controls muted loop playsinline
-                    style="max-width: 100%; max-height: 100%; margin: 0 auto;">
-                    <source src="./static/videos/policy_io_Zip_up_your_backpack_and_close_your_backpack_rollout_2_failure.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-                <p class="video-caption" style="margin-top: 10px; text-align: center;">RT-1</p>
-                <figure class="image" style="margin-top: 10px;">
-                  <img src="./static/videos/policy_io_Zip_up_your_backpack_and_close_your_backpack_rollout_2_failure_noisy_joints.png" alt="Joint Noise for RT-1">
-                </figure>
-              </div>
-            </div>
-
-            <!-- Second video column -->
-            <div class="column">
-              <div class="video-container" style="text-align: center;">
-                <div class="video-wrapper"
-                  style="height: 250px; display: flex; align-items: center; justify-content: center;">
-                  <video id="video-2" autoplay controls muted loop playsinline
-                    style="max-width: 100%; max-height: 100%; margin: 0 auto;">
-                    <source src="./static/videos/policy_io_Zip_up_your_backpack_and_close_your_backpack_rollout_3_failure.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-                <p class="video-caption" style="margin-top: 10px; text-align: center;">Octo</p>
-                <figure class="image" style="margin-top: 10px;">
-                  <img src="./static/videos/policy_io_Zip_up_your_backpack_and_close_your_backpack_rollout_3_failure_noisy_joints.png" alt="Joint Noise for Octo">
-                </figure>
-              </div>
-            </div>
-
-            <!-- Third video column -->
-            <div class="column">
-              <div class="video-container" style="text-align: center;">
-                <div class="video-wrapper"
-                  style="height: 250px; display: flex; align-items: center; justify-content: center;">
-                  <video id="video-3" autoplay controls muted loop playsinline
-                    style="max-width: 100%; max-height: 100%; margin: 0 auto;">
-                    <source src="./static/videos/policy_io_Zip_up_your_backpack_and_close_your_backpack_rollout_4_failure.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-                <p class="video-caption" style="margin-top: 10px; text-align: center;">Baku</p>
-                <figure class="image" style="margin-top: 10px;">
-                  <img src="./static/videos/policy_io_Zip_up_your_backpack_and_close_your_backpack_rollout_4_failure_noisy_joints.png" alt="Joint Noise for Baku">
-                </figure>
-              </div>
-            </div>
-
-            <!-- Fourth video column -->
-            <div class="column">
-              <div class="video-container" style="text-align: center;">
-                <div class="video-wrapper"
-                  style="height: 250px; display: flex; align-items: center; justify-content: center;">
-                  <video id="video-4" autoplay controls muted loop playsinline
-                    style="max-width: 100%; max-height: 100%; margin: 0 auto;">
-                    <source src="./static/videos/policy_io_Zip_up_your_backpack_and_close_your_backpack_rollout_5_failure.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-                <p class="video-caption" style="margin-top: 10px; text-align: center;">MTACT-18</p>
-                <figure class="image" style="margin-top: 10px;">
-                  <img src="./static/videos/policy_io_Zip_up_your_backpack_and_close_your_backpack_rollout_5_failure_noisy_joints.png" alt="Joint Noise for MTACT-18">
-                </figure>
-              </div>
-            </div>
-
-            <!-- Fifth video column -->
-            <div class="column">
-              <div class="video-container" style="text-align: center;">
-                <div class="video-wrapper"
-                  style="height: 250px; display: flex; align-items: center; justify-content: center;">
-                  <video id="video-5" autoplay controls muted loop playsinline
-                    style="max-width: 100%; max-height: 100%; margin: 0 auto;">
-                    <source src="./static/videos/policy_io_Zip_up_your_backpack_and_close_your_backpack_rollout_6_failure.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-                <p class="video-caption" style="margin-top: 10px; text-align: center;">MTACT-34</p>
-                <figure class="image" style="margin-top: 10px;">
-                  <img src="./static/videos/policy_io_Zip_up_your_backpack_and_close_your_backpack_rollout_6_failure_noisy_joints.png" alt="Joint Noise for MTACT-34">
-                </figure>
-              </div>
-            </div>
-
-            <!-- Sixth video column -->
-            <div class="column">
-              <div class="video-container" style="text-align: center;">
-                <div class="video-wrapper"
-                  style="height: 250px; display: flex; align-items: center; justify-content: center;">
-                  <video id="video-6" autoplay controls muted loop playsinline
-                    style="max-width: 100%; max-height: 100%; margin: 0 auto;">
-                    <source src="./static/videos/policy_io_Zip_up_your_backpack_and_close_your_backpack_rollout_7_failure.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-                <p class="video-caption" style="margin-top: 10px; text-align: center;">MTACT-101</p>
-                <figure class="image" style="margin-top: 10px;">
-                  <img src="./static/videos/policy_io_Zip_up_your_backpack_and_close_your_backpack_rollout_7_failure_noisy_joints.png" alt="Joint Noise for MTACT-101">
-                </figure>
-              </div>
-            </div>
-
-            <!-- Seventh video column -->
-            <div class="column">
-              <div class="video-container" style="text-align: center;">
-                <div class="video-wrapper"
-                  style="height: 250px; display: flex; align-items: center; justify-content: center;">
-                  <video id="video-7" autoplay controls muted loop playsinline
-                    style="max-width: 100%; max-height: 100%; margin: 0 auto;">
-                    <source src="./static/videos/policy_io_Zip_up_your_backpack_and_close_your_backpack_rollout_2_success.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-                <p class="video-caption" style="margin-top: 10px; text-align: center;">Ours</p>
-                <figure class="image" style="margin-top: 10px;">
-                  <img src="./static/videos/policy_io_Zip_up_your_backpack_and_close_your_backpack_rollout_2_success_noisy_joints.png" alt="Joint Noise for Ours">
-                </figure>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-
-      <section class="section" id="BibTeX">
-        <div class="container is-max-desktop content">
-          <h2 class="title">BibTeX</h2>
-          <pre><code>
-      author = {Yong Wang, Chao Xu, Shengze Cai},
-      title = {An Intuitive Multi-Task Manipulation Policy for Imitation Learning in Sim and Real Robots},
-      year = {2025},
-      </code></pre>
-        </div>
-      </section>
     </div>
   </section>
 
-  <footer class="footer">
+  <!-- Scroll down to see more videos -->
+  <section class="section" style="background: #111; padding-top: 6rem; padding-bottom: 6rem;">
     <div class="container">
-      <div class="columns is-centered">
-        <div class="column">
-          <div class="content has-text-centered">
-            <p>
-              Website template borrowed from <a href="https://nerfies.github.io/">Nerfies</a>
-            </p>
-          </div>
+      <h2 class="title is-2 has-text-centered has-text-white" style="margin-bottom: 4rem;">
+        More Results
+      </h2>
+
+      <div class="video-grid">
+        <!-- Automatically add 2.mp4, 3.mp4, 4.mp4 ... up to 20 (you can adjust) -->
+        <div class="video-item">
+          <video playsinline autoplay muted loop controls poster="./static/videos/loading-icon.gif">
+            <source src="2.mp4" type="video/mp4">
+          </video>
         </div>
+        <div class="video-item">
+          <video playsinline autoplay muted loop controls poster="./static/videos/loading-icon.gif">
+            <source src="3.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="video-item">
+          <video playsinline autoplay muted loop controls poster="./static/videos/loading-icon.gif">
+            <source src="4.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="video-item">
+          <video playsinline autoplay muted loop controls poster="./static/videos/loading-icon.gif">
+            <source src="5.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="video-item">
+          <video playsinline autoplay muted loop controls poster="./static/videos/loading-icon.gif">
+            <source src="6.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="video-item">
+          <video playsinline autoplay muted loop controls poster="./static/videos/loading-icon.gif">
+            <source src="7.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="video-item">
+          <video playsinline autoplay muted loop controls poster="./static/videos/loading-icon.gif">
+            <source src="8.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="video-item">
+          <video playsinline autoplay muted loop controls poster="./static/videos/loading-icon.gif">
+            <source src="9.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="video-item">
+          <video playsinline autoplay muted loop controls poster="./static/videos/loading-icon.gif">
+            <source src="10.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="video-item">
+          <video playsinline autoplay muted loop controls poster="./static/videos/loading-icon.gif">
+            <source src="11.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="video-item">
+          <video playsinline autoplay muted loop controls poster="./static/videos/loading-icon.gif">
+            <source src="12.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="video-item">
+          <video playsinline autoplay muted loop controls poster="./static/videos/loading-icon.gif">
+            <source src="13.mp4" type="video/mp4">
+          </video>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer" style="background: #000; color: #aaa;">
+    <div class="container">
+      <div class="content has-text-centered">
+        <p>Page template inspired by <a href="https://nerfies.github.io/">Nerfies</a> and <a href="https://umi-on-legs.github.io/">UMI on Legs</a>.</p>
       </div>
     </div>
   </footer>
 
 </body>
-
 </html>
