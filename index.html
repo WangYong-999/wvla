@@ -76,53 +76,41 @@
       <h1 class="subtitle is-1 publication-title is-size-4-mobile" style="font-size: 3.5rem; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);">
         From Whole-Body Control to Vision Language Action Model 
       </h1>
-      <!-- <p style="font-size: 1.5rem; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);">
-        <!-- <a href="https://qiayuanl.github.io/">Qiayuan Liao<sup>*</sup></a>, 
-        <a href="https://www.takaratruong.com/">Takara Truong<sup>*</sup></a>, 
-        <a href="">Xiaoyu Huang<sup>*</sup></a>,
-        <a href="https://guytevet.github.io/">Guy Tevet</a>,
-        <a href="https://hybrid-robotics.berkeley.edu/koushil/">Koushil Sreenath<sup>†</sup></a>,
-        <a href="https://tml.stanford.edu/people/karen-liu">C. Karen Liu<sup>†</sup></a> -->
-      </p> -->
+      <p style="font-size: 1.5rem; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);">
+        <a href="">Yong Wang<sup>*</sup></a>, 
+        <a href="">Ran Cheng<sup>*</sup></a>, 
+        <a href="">Kecheng Zheng<sup>*</sup></a>,
+        <a href="">Hua Chen</a>,
+        <a href="">Chao Xu<sup>†</sup></a>,
+        <a href="">Shengze Cai<sup>†</sup></a>
+      </p>
     </div>
   </div>
 
 </section>
-
+<!-- 
 <section class="section">
   <div class="container">
     <div class="columns is-centered">
       <div class="column is-half">
-        <h2 class="title is-2">Abstract</h2>
+        <h2 class="title is-2">Method</h2>
         <div class="content has-text-justified">
           <p class="abstract-text" style="font-size: 0.95rem; line-height: 1.5;">
-            xxx
           </p>
         </div>
       </div>
     </div>
   </div>
-</section>
-
-<!-- <section class="section" style="padding-top: 0;">
-  <div class="container">
-    <div class="columns is-centered">
-      <div class="column is-half">
-        <div class="has-text-centered">
-          <img src="./static/images/fig1.png" alt="method" style="max-width: 100%; border-radius: 10px; border: 1px solid #ddd;">
-          <!-- <p class="is-size-6 has-text-grey" style="margin-top: 0.5rem;">图像标题或说明文字</p> -->
-        </div>
-      </div>
-    </div>
-  </div>
 </section> -->
+
 <section class="section" style="padding-top: 0;">
   <div class="container">
     <div style="max-width: 1000px; margin: 0 auto;">
       <div class="has-text-centered">
+        <h2 class="title is-2">Method</h2>
         <img src="./static/images/fig1.png" alt="method" 
              style="width: 100%; max-height: 600px; object-fit: contain; border-radius: 10px; border: 1px solid #ddd;">
-        <!-- <p class="is-size-6 has-text-grey" style="margin-top: 0.5rem;">图像标题或说明文字</p> -->
+        <p class="is-size-6 has-text-grey" style="margin-top: 0.5rem;">The proposed approach includes: (a) designing a wearable exoskeleton to control the whole-body motion of a humanoid robot; (b) preserving task-related language descriptions, states, language, and visual information; and (c) designing a visual-language-action model, trained on the acquired dataset, and using the preserved weights to receive robot information in real time for automated whole-body task inference.</p>
       </div>
     </div>
   </div>
@@ -134,13 +122,13 @@
     <h2 class="title is-2" style="text-align: center;">Whole-Body Task</h2>
     <div class="columns is-centered">
       <div class="column is-full-width is-centered has-text-centered">
-        <video autoplay loop muted playsinline src="./static/videos/motion_tracking/prep_IMG_2643.mp4" poster="./static/videos/loading-icon.gif" style="border: 1px solid #bbb; border-radius: 10px; margin: 1.0%;"></video>
+        <video autoplay loop muted playsinline src="./static/videos/1.mp4" poster="./static/videos/loading-icon.gif" style="border: 1px solid #bbb; border-radius: 10px; margin: 1.0%;"></video>
       </div>
       <div class="column is-full-width is-centered has-text-centered">
-        <video autoplay loop muted playsinline src="./static/videos/motion_tracking/prep_IMG_2669.mp4" poster="./static/videos/loading-icon.gif" style="border: 1px solid #bbb; border-radius: 10px; margin: 1.0%;"></video>
+        <video autoplay loop muted playsinline src="./static/videos/2.mp4" poster="./static/videos/loading-icon.gif" style="border: 1px solid #bbb; border-radius: 10px; margin: 1.0%;"></video>
       </div>
         <div class="column is-full-width is-centered has-text-centered">
-        <video autoplay loop muted playsinline src="./static/videos/motion_tracking/prep_IMG_2661.mp4" poster="./static/videos/loading-icon.gif" style="border: 1px solid #bbb; border-radius: 10px; margin: 1.0%;"></video>
+        <video autoplay loop muted playsinline src="./static/videos/3.mp4" poster="./static/videos/loading-icon.gif" style="border: 1px solid #bbb; border-radius: 10px; margin: 1.0%;"></video>
       </div>
     </div>
   </div>
@@ -152,13 +140,13 @@
     <h2 class="title is-2" style="text-align: center;">Dual-Arm Task</h2>
     <div class="columns is-centered">
       <div class="column is-full-width is-centered has-text-centered">
-        <video autoplay loop muted playsinline src="./static/videos/motion_tracking/prep_IMG_2643.mp4" poster="./static/videos/loading-icon.gif" style="border: 1px solid #bbb; border-radius: 10px; margin: 1.0%;"></video>
+        <video autoplay loop muted playsinline src="./static/videos/4.mp4" poster="./static/videos/loading-icon.gif" style="border: 1px solid #bbb; border-radius: 10px; margin: 1.0%;"></video>
       </div>
       <div class="column is-full-width is-centered has-text-centered">
-        <video autoplay loop muted playsinline src="./static/videos/motion_tracking/prep_IMG_2669.mp4" poster="./static/videos/loading-icon.gif" style="border: 1px solid #bbb; border-radius: 10px; margin: 1.0%;"></video>
+        <video autoplay loop muted playsinline src="./static/videos/5.mp4" poster="./static/videos/loading-icon.gif" style="border: 1px solid #bbb; border-radius: 10px; margin: 1.0%;"></video>
       </div>
         <div class="column is-full-width is-centered has-text-centered">
-        <video autoplay loop muted playsinline src="./static/videos/motion_tracking/prep_IMG_2661.mp4" poster="./static/videos/loading-icon.gif" style="border: 1px solid #bbb; border-radius: 10px; margin: 1.0%;"></video>
+        <video autoplay loop muted playsinline src="./static/videos/6.mp4" poster="./static/videos/loading-icon.gif" style="border: 1px solid #bbb; border-radius: 10px; margin: 1.0%;"></video>
       </div>
     </div>
   </div>
@@ -167,16 +155,16 @@
 
 <section class="section">
   <div class="container">
-    <h2 class="title is-2" style="text-align: center;">Loco_Manipulation Task</h2>
+    <h2 class="title is-2" style="text-align: center;">Loco-Manipulation Task</h2>
     <div class="columns is-centered">
       <div class="column is-full-width is-centered has-text-centered">
-        <video autoplay loop muted playsinline src="./static/videos/motion_tracking/prep_IMG_2643.mp4" poster="./static/videos/loading-icon.gif" style="border: 1px solid #bbb; border-radius: 10px; margin: 1.0%;"></video>
+        <video autoplay loop muted playsinline src="./static/videos/7.mp4" poster="./static/videos/loading-icon.gif" style="border: 1px solid #bbb; border-radius: 10px; margin: 1.0%;"></video>
       </div>
       <div class="column is-full-width is-centered has-text-centered">
-        <video autoplay loop muted playsinline src="./static/videos/motion_tracking/prep_IMG_2669.mp4" poster="./static/videos/loading-icon.gif" style="border: 1px solid #bbb; border-radius: 10px; margin: 1.0%;"></video>
+        <video autoplay loop muted playsinline src="./static/videos/8.mp4" poster="./static/videos/loading-icon.gif" style="border: 1px solid #bbb; border-radius: 10px; margin: 1.0%;"></video>
       </div>
         <div class="column is-full-width is-centered has-text-centered">
-        <video autoplay loop muted playsinline src="./static/videos/motion_tracking/prep_IMG_2661.mp4" poster="./static/videos/loading-icon.gif" style="border: 1px solid #bbb; border-radius: 10px; margin: 1.0%;"></video>
+        <video autoplay loop muted playsinline src="./static/videos/9.mp4" poster="./static/videos/loading-icon.gif" style="border: 1px solid #bbb; border-radius: 10px; margin: 1.0%;"></video>
       </div>
     </div>
   </div>
